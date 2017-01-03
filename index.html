@@ -1,72 +1,28 @@
-<html>
-<head>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+	<meta charset="utf-8">
 	<title>1942 Game</title>
-
-<style type="text/css">
-	body{
-		background-color:black;
-	}
-	#container{
-		background: url('background.jpg');
-		width:1000px;
-		height:550px;
-	}
-	#hero{
-		background: url('1942.gif');
-		background-position: -85px -180px;
-		width:28px;
-		height:28px;
-		position:absolute;
-	}
-	.enemy1{
-		background: url('1942.gif');
-		background-position: -30px -10px;
-		width:28px;
-		height:28px;
-		position:absolute;
-	}
-	.bullet{
-		background: url('1942.gif');
-		background-position: -185px -400px;
-		width:18px;
-		height:18px;
-		position:absolute;
-	}
-	#score{
-		position:absolute;
-		border:10px solid red;
-		top:20px;
-		left:800px;
-		background-color:white;
-		padding:10px;
-		font-size:30px;
-		font-family: Arial;	
-	}
-</style>
-</head>
-<body>
-	<div id='container'>
-		<div id='hero' style='top:300px; left:300px;'></div>
-		<div id='enemies'>
-			<div class='enemy1' style='top:100px; left:100px;'></div>
-			<div class='enemy1' style='top:100px; left:200px;'></div>
-			<div class='enemy1' style='top:100px; left:300px;'></div>
-			<div class='enemy1' style='top:100px; left:400px;'></div>
-		</div>
-		<div id='bullets'>
-			<div class='bullet' style='top:150px; left:200px;'></div>
-			<div class='bullet' style='top:250px; left:200px;'></div>
-			<div class='bullet' style='top:350px; left:200px;'></div>
-			<div class='bullet' style='top:450px; left:200px;'></div>
-		</div>	
+	<link rel="stylesheet" href="./assets/css/style.css">
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+	<script src="./assets/js/app.js" type="application/js"></script>
+  </head>
+  <body>
+	<div id="container">
+	  <div id="hero"></div>
+	  <div id="enemies">
+		<div class="enemy-1"></div>
+		<div class="enemy-1"></div>
+		<div class="enemy-1"></div>
+		<div class="enemy-1"></div>
+	  </div>
+	  <div id="bullets">
+		<div class="bullet"></div>
+		<div class="bullet"></div>
+		<div class="bullet"></div>
+		<div class="bullet"></div>
+	  </div>
+	  <div id="score"></div>
 	</div>
-
-	<div id='score'>100</div>
-
-
-<script>
-
-</script>
-
-</body>
+  </body>
 </html>
