@@ -9,17 +9,20 @@ body
 
 #hero
 	background:  url('../img/1942.gif')
-	background-position:  -85px -180px
-	width: 28px
-	height: 28px
+	background-position:  -85px -183px
+	width: 25px
+	height: 20px
 	position: absolute
+	animation: Hero-sway 2s infinite
 
-.enemy1
+enemy_0
 	background:  url('../img/1942.gif')
-	background-position:  -30px -10px
-	width: 28px
-	height: 28px
+	background-position:  -32px -10px
+	width: 26px
+	height: 17px
 	position: absolute
+	transform: rotateX(180deg)
+	animation: Enemy-sway 2s infinite
 
 .bullet
 	background:  url('../img/1942.gif')
@@ -30,10 +33,34 @@ body
 
 #score
 	position: absolute
-	border: 10px solid red
-	top: 20px
-	left: 800px
+	border: 5px solid red
+	top: 575px
+	left: 80px
 	background-color: white
 	padding: 10px
 	font-size: 30px
 	font-family:  Arial
+
+@keyframes Enemy-sway
+	0%
+		transform: translateX(0px) rotateX(180deg)
+	25%
+		transform: translateX(3px) rotateX(180deg)
+	50%
+		transform: translateX(0px) rotateX(180deg)
+	75%
+		transform: translateX(-3px) rotateX(180deg)
+	100%
+		transform: translateX(0px) rotateX(180deg)
+
+@keyframes Hero-sway
+	0%
+		transform: translateY(0px)
+	25%
+		transform: translateY(3px)
+	50%
+		transform: translateY(0px)
+	75%
+		transform: translateY(-3px)
+	100%
+		transform: translateY(0px)
