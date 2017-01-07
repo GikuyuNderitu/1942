@@ -6,9 +6,11 @@ const Nineteen42 = function(){
 	let hero_bullets = []
 	let enemies = []
 	let enemy_bullets = []
+	let score = 0
 
 	const initialize = function () {
 		draw_hero()
+		draw_score()
 		create_enemy_0()
 	}
 
@@ -73,6 +75,8 @@ const Nineteen42 = function(){
 								enemies.splice(enemy, 1)
 						}
 						$('#'+to_delete[1]).remove()
+						score += 10
+						draw_score()
 					}
 				}
 			}
@@ -94,6 +98,9 @@ const Nineteen42 = function(){
 		return arr
 	}
 
+	const draw_score = function () {
+		$('#score').html(score)
+	}
 	const draw_hero = function (pos) {
 		let hero = new Hero(0, hero_counter++)
 		heroes.push(hero)
