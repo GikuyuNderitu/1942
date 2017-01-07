@@ -1,4 +1,4 @@
-// TODO: Display the hero
+/* TODO: Display the hero*/
 // TODO: Make the hero move up/down/left/right
 // TODO: Display all of the enemies
 // TODO: Make the enemies move
@@ -16,55 +16,57 @@ const remove_px = function (str) {
 	return num
 }
 
-const Bullet = function (x, y, velocity, type, bull_id) {
-	const make_bullet = function (tag, attr) {
+const Bullet = function (x, y, velocity = 3, type, bull_id) {
+	const make_bullet = function (tag, attrs) {
 		let ele = document.createElement(tag)
 		for(let val in attrs){
 			ele.setAttribute(val, attrs[val])
 		}
 		return ele
 	}
-	this.pos = {
-		x: x,
-		y: y
-	}
-	this.velocity = velocity
-	this.type = type || 1
-	this.velocity = 7
 
-	const html_id = bull_id
-
-	this.initialize = function () {
-		let bullet = make_bullet('bullet_'+this.type,{
-			style: `top: ${this.pos.y}px; left: ${this.pos.x}px`,
+	const initialize = function () {
+		let bullet = make_bullet('bullet_'+type,{
+			style: `top: ${pos.y}px; left: ${pos.x}px`,
 			id: html_id
 		})
 
-		$('#container').append(bullet)
+		$('#bullets').append(bullet)
 	}
+
+	let pos = {
+		x: x,
+		y: y
+	}
+
+	const html_id = bull_id
+
+	this.velocity = velocity
+	this.type = type || 1
 
 	this.update = function (time) {
 		let ele = $(('#'+html_id))
 		let cur_y = remove_px(ele.css('top'))
 	}
 
+	this.change_velocity = function (velocity) {
+		this.velocity = velocity
+	}
 
-	this.initialize()
+	initialize()
 }
 
 const Enemy = function (ship, health, x, y, ship_id) {
 	this.ship = ship
 	this.health = health
+	this.velocity = 1
+	const html_id = ship_id
 	let pos ={
 		x: x,
 		y: y
 	}
-	this.velocity = 2.5
-
-	const html_id = ship_id
 
 	const initialize = function () {
-		console.log(`top: ${pos.y}px`)
 		//create the ship
 		let enemy = makeEnemy('enemy_'+ship,{
 			style: `top: ${pos.y}px; left: ${pos.x}px`,
@@ -77,6 +79,10 @@ const Enemy = function (ship, health, x, y, ship_id) {
 	this.update = function (time) {
 		let ele = $(('#'+html_id))
 		let cur_y = remove_px(ele.css('top'))
+
+		if(cur_y > remove_px($('#container').css('height'))){
+			cur_y = 1
+		}
 
 		pos.y = cur_y + this.velocity*time
 
@@ -94,49 +100,101 @@ const Enemy = function (ship, health, x, y, ship_id) {
 	initialize()
 }
 
-const Hero = function () {
+const Hero = function (type, hero_id) {
+	let pos = {
+		x: 500,
+		y: 500
+	}
+	const html_id = hero_id
 
+	this.getHero = function () {
+		return pos
+	}
+
+	this.sethero_X = function (val) {
+		pos.x += val
+		draw_hero()
+	}
+
+	this.sethero_Y = function (val) {
+		pos.y += val
+		draw_hero()
+	}
+
+	const make_hero = function (tag, attrs) {
+		let ele = document.createElement(tag)
+		for(let val in attrs){
+			ele.setAttribute(val, attrs[val])
+		}
+		return ele
+	}
+
+	const draw_hero = function () {
+		$('#'+html_id).attr('style', `top: ${pos.y}px; left: ${pos.x}px`)
+	}
+
+	const initialize = function () {
+		let hero = make_hero('hero_'+type,{
+			style: `top: ${pos.y}px; left: ${pos.x}px`,
+			id: html_id
+		})
+
+		$('#heroes').append(hero)
+	}
+
+	initialize()
 }
 
 const Nineteen42 = function(){
 	let enemy_counter = 0
 	let hero_counter = 0
-	let enemies = []
+	let bullet_counter = 0
+	let heroes = []
 	let hero_bullets = []
+	let enemies = []
+	let enemy_bullets = []
 
-	this.hero = {
-		x: 500,
-		y: 500
-	}
-
-
-	this.getHero = function () {
-		return this.hero
-	}
-
-	this.sethero_X = function (val) {
-		this.hero.x += val
-	}
-
-	this.sethero_Y = function (val) {
-		this.hero.y += val
-	}
-
-	this.initialize = function () {
-		this.draw_hero()
-		this.create_enemy_0()
+	const initialize = function () {
+		draw_hero()
+		create_enemy_0()
 	}
 
 	this.heroShot = function () {
-		let new_bullet = new Bullet(1)
-		hero_bullets.push(new_bullet)
+		//Get positions of all existing heroes
+		let positions = get_hero_positions()
+
+		//Create bullets with initial positions gotten from the heroes
+		for(let i = 0; i<positions.length;i++){
+			let new_bullet = new Bullet(positions[i].x+8.5,positions[i].y-8, null, 0, bullet_counter++)
+			hero_bullets.push(new_bullet)
+		}
 	}
 
-
-	this.draw_hero = function () {
-		let hero = this.hero
-		$('#hero').css({top: (hero.y)+'px', left: hero.x+'px'})
+	this.move_hero = function (direction) {
+		switch (direction) {
+			case 'LEFT':
+				for(hero in heroes){
+					heroes[hero].sethero_X(-1.5)
+				}
+				break;
+			case 'RIGHT':
+				for(hero in heroes){
+					heroes[hero].sethero_X(1.5)
+				}
+				break;
+			case 'UP':
+				for(hero in heroes){
+					heroes[hero].sethero_Y(-1.5)
+				}
+				break;
+			case 'DOWN':
+				for(hero in heroes){
+					heroes[hero].sethero_Y(1.5)
+				}
+				break;
+		}
 	}
+
 
 	this.draw_enemy = function () {
 
@@ -148,11 +206,23 @@ const Nineteen42 = function(){
 		}
 	}
 
-	this.create_enemy_0 = function () {
+	const get_hero_positions = function () {
+		let arr = []
+		for(hero in heroes)
+			arr.push(heroes[hero].getHero())
+		return arr
+	}
+
+	const draw_hero = function (pos) {
+		let hero = new Hero(0, hero_counter++)
+		heroes.push(hero)
+	}
+
+	const create_enemy_0 = function () {
 		let container_width = remove_px($('#container').css('width'))
 		let pos = {
 			x: container_width/5, //The position of the first plane is decided by the number of planes in each row
-			y: 50
+			y: -20
 		}
 
 		for (var i = 0; i < 5; i++) {
@@ -162,29 +232,25 @@ const Nineteen42 = function(){
 		}
 	}
 
-	this.initialize()
+	initialize()
 }
 
 $(function(){
 	const game = new Nineteen42()
 
-	setInterval(game.move_enemies, 1000)
+	setInterval(game.move_enemies, 100)
 
 
 	//Manipulate Hero's position
 	$(document).on('keydown',function(e){
 		if(e.key === 'ArrowLeft'){
-			game.sethero_X(-3)
-			game.draw_hero()
+			game.move_hero('LEFT')
 		}else if(e.key === 'ArrowRight'){
-			game.sethero_X(3)
-			game.draw_hero()
+			game.move_hero('RIGHT')
 		}else if (e.key === 'ArrowUp') {
-			game.sethero_Y(-3)
-			game.draw_hero()
+			game.move_hero('UP')
 		}else if(e.key === 'ArrowDown'){
-			game.sethero_Y(3)
-			game.draw_hero()
+			game.move_hero('DOWN')
 		}
 
 		if(e.key === ' '){
