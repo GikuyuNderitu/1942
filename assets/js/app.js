@@ -16,7 +16,7 @@ const remove_px = function (str) {
 	return num
 }
 
-const Bullet = function (x, y, velocity = 3, type, bull_id) {
+const Bullet = function (x, y, velocity = 1, type, bull_id) {
 	const make_bullet = function (tag, attrs) {
 		let ele = document.createElement(tag)
 		for(let val in attrs){
@@ -39,7 +39,7 @@ const Bullet = function (x, y, velocity = 3, type, bull_id) {
 		y: y
 	}
 
-	const html_id = bull_id
+	const html_id = 'bullet_'+bull_id
 
 	this.velocity = velocity
 	this.type = type || 1
@@ -47,6 +47,12 @@ const Bullet = function (x, y, velocity = 3, type, bull_id) {
 	this.update = function (time) {
 		let ele = $(('#'+html_id))
 		let cur_y = remove_px(ele.css('top'))
+		if(cur_y < 0 || cur_y > remove_px($('#container').css('height'))){
+				return html_id
+		}
+		pos.y = cur_y + this.velocity * time
+
+		ele.attr('style', `top: ${pos.y}px; left: ${pos.x}px`)
 	}
 
 	this.change_velocity = function (velocity) {
@@ -60,12 +66,13 @@ const Enemy = function (ship, health, x, y, ship_id) {
 	this.ship = ship
 	this.health = health
 	this.velocity = 1
-	const html_id = ship_id
+	const html_id = 'enemy_'+ship_id
 	let pos ={
 		x: x,
 		y: y
 	}
 
+	//Private functions
 	const initialize = function () {
 		//create the ship
 		let enemy = makeEnemy('enemy_'+ship,{
@@ -76,6 +83,15 @@ const Enemy = function (ship, health, x, y, ship_id) {
 		$('#enemies').append(enemy)
 	}
 
+	const makeEnemy =  function (tag, attrs) {
+		let ele = document.createElement(tag)
+		for(let val in attrs){
+			ele.setAttribute(val, attrs[val])
+		}
+		return ele
+	}
+
+	//Public functions
 	this.update = function (time) {
 		let ele = $(('#'+html_id))
 		let cur_y = remove_px(ele.css('top'))
@@ -89,13 +105,6 @@ const Enemy = function (ship, health, x, y, ship_id) {
 		ele.attr('style', `top: ${pos.y}px; left: ${pos.x}px`)
 	}
 
-	const makeEnemy =  function (tag, attrs) {
-		let ele = document.createElement(tag)
-		for(let val in attrs){
-			ele.setAttribute(val, attrs[val])
-		}
-		return ele
-	}
 
 	initialize()
 }
@@ -105,21 +114,7 @@ const Hero = function (type, hero_id) {
 		x: 500,
 		y: 500
 	}
-	const html_id = hero_id
-
-	this.getHero = function () {
-		return pos
-	}
-
-	this.sethero_X = function (val) {
-		pos.x += val
-		draw_hero()
-	}
-
-	this.sethero_Y = function (val) {
-		pos.y += val
-		draw_hero()
-	}
+	const html_id = 'hero_'+hero_id
 
 	const make_hero = function (tag, attrs) {
 		let ele = document.createElement(tag)
@@ -141,6 +136,21 @@ const Hero = function (type, hero_id) {
 
 		$('#heroes').append(hero)
 	}
+
+	this.getHero = function () {
+		return pos
+	}
+
+	this.sethero_X = function (val) {
+		pos.x += val
+		draw_hero()
+	}
+
+	this.sethero_Y = function (val) {
+		pos.y += val
+		draw_hero()
+	}
+
 
 	initialize()
 }
@@ -165,7 +175,7 @@ const Nineteen42 = function(){
 
 		//Create bullets with initial positions gotten from the heroes
 		for(let i = 0; i<positions.length;i++){
-			let new_bullet = new Bullet(positions[i].x+8.5,positions[i].y-8, null, 0, bullet_counter++)
+			let new_bullet = new Bullet(positions[i].x+8.5,positions[i].y-8, -3, 0, bullet_counter++)
 			hero_bullets.push(new_bullet)
 		}
 	}
@@ -206,6 +216,19 @@ const Nineteen42 = function(){
 		}
 	}
 
+	this.move_bullets = function () {
+		if(hero_bullets.length > 0){
+			for(let bullet in hero_bullets){
+				let to_delete = hero_bullets[bullet].update(1)
+				if(to_delete){
+					hero_bullets.splice(bullet,1)
+					$('#'+to_delete).remove()
+				}
+			}
+		}
+		if(enemy_bullets.length > 0);
+	}
+
 	const get_hero_positions = function () {
 		let arr = []
 		for(hero in heroes)
@@ -239,6 +262,7 @@ $(function(){
 	const game = new Nineteen42()
 
 	setInterval(game.move_enemies, 100)
+	setInterval(game.move_bullets, 40)
 
 
 	//Manipulate Hero's position
