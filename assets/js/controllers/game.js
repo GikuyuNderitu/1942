@@ -61,11 +61,19 @@ const Nineteen42 = function(){
 
 	this.move_bullets = function () {
 		if(hero_bullets.length > 0){
+			let targets = get_enemy_positions()
 			for(let bullet in hero_bullets){
-				let to_delete = hero_bullets[bullet].update(1)
+				let to_delete = hero_bullets[bullet].update(1, enemies)
 				if(to_delete){
 					hero_bullets.splice(bullet,1)
-					$('#'+to_delete).remove()
+					$('#'+to_delete[0]).remove()
+					if(to_delete[1]){
+						for(let enemy in enemies){
+							if(enemies[enemy].getId()=== to_delete[1])
+								enemies.splice(enemy, 1)
+						}
+						$('#'+to_delete[1]).remove()
+					}
 				}
 			}
 		}
@@ -76,6 +84,13 @@ const Nineteen42 = function(){
 		let arr = []
 		for(hero in heroes)
 			arr.push(heroes[hero].getHero())
+		return arr
+	}
+
+	const get_enemy_positions = function () {
+		let arr = []
+		for(enemy in enemies)
+			arr.push(enemies[enemy].getEnemy())
 		return arr
 	}
 

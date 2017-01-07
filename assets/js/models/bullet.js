@@ -21,16 +21,27 @@ const Bullet = function (x, y, velocity = 1, type, bull_id) {
 		y: y
 	}
 
-	const html_id = 'bullet_'+bull_id
+	const html_id = bull_id
 
 	this.velocity = velocity
 	this.type = type || 1
 
-	this.update = function (time) {
+	this.update = function (time, targets) {
 		let ele = $(('#'+html_id))
-		let cur_y = remove_px(ele.css('top'))
+		let cur_y = remove_px(ele.css('top')), cur_x = remove_px(ele.css('left'))
+
+		//Determines if Bullet has left the page.
 		if(cur_y < 0 || cur_y > remove_px($('#container').css('height'))){
-				return html_id
+				return [html_id, null]
+		}
+
+		//Determines if there has been a collision with enemy ship
+		for(let target in targets){
+			let targ = targets[target].getEnemy()
+			if((cur_y >= targ.y && cur_y <= targ.y+17) && (cur_x >= targ.x && cur_x <=targ.x+26)){
+				let collide = new Collision(cur_x, cur_y, 0)
+				return [html_id, targets[target].getId()]
+			}
 		}
 		pos.y = cur_y + this.velocity * time
 

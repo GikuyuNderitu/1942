@@ -1,4 +1,4 @@
-const Collision = function (x, y, type, col_id) {
+const Collision = function (x, y, type, col_id=1) {
 	const html_id = `collision_${col_id}`
 	const initialize = function () {
 		let collide = make_collision('collision_'+type,{
@@ -10,7 +10,7 @@ const Collision = function (x, y, type, col_id) {
 	}
 
 	const make_collision = function (tag, attrs) {
-		let ele = createElement(tag)
+		let ele = document.createElement(tag)
 		for(let val in attrs)
 			ele.setAttribute(val, attrs[val])
 		return ele

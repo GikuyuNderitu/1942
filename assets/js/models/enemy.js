@@ -1,4 +1,4 @@
-const Enemy = function (ship, health, x, y, ship_id) {
+const Enemy = function (ship, health, x, y, ship_id, idx) {
 	this.ship = ship
 	this.health = health
 	this.velocity = 1
@@ -28,6 +28,14 @@ const Enemy = function (ship, health, x, y, ship_id) {
 	}
 
 	//Public functions
+	this.getEnemy = function () {
+		return pos
+	}
+
+	this.getId = function () {
+		return html_id
+	}
+
 	this.update = function (time) {
 		let ele = $(('#'+html_id))
 		let cur_y = remove_px(ele.css('top'))
