@@ -18,7 +18,7 @@ const Nineteen42 = function(){
 
 		//Create bullets with initial positions gotten from the heroes
 		for(let i = 0; i<positions.length;i++){
-			let new_bullet = new Bullet(positions[i].x+8.5,positions[i].y-8, -3, 0, bullet_counter++)
+			let new_bullet = new Bullet(positions[i].x+8.5,positions[i].y-8, -3, 0, ('hero_bullet'+bullet_counter++))
 			hero_bullets.push(new_bullet)
 		}
 	}
