@@ -5,8 +5,14 @@ const Collision = function (x, y, type, col_id=1) {
 			style: `top: ${y}px; left: ${x}px`,
 			id: html_id
 		})
-
+		play_sound()
 		$('#container').append(collide)
+	}
+
+	const play_sound = function () {
+		const explode = document.createElement('audio')
+		explode.setAttribute('src','assets/media/explosion.mp3')
+		explode.play()
 	}
 
 	const make_collision = function (tag, attrs) {

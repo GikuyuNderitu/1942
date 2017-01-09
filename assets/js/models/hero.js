@@ -1,8 +1,9 @@
-const Hero = function (type, hero_id) {
+const Hero = function (type, hero_id, container_size) {
 	let pos = {
 		x: 500,
 		y: 500
 	}
+	const container = container_size
 	const html_id = 'hero_'+hero_id
 
 	const make_hero = function (tag, attrs) {
@@ -31,12 +32,14 @@ const Hero = function (type, hero_id) {
 	}
 
 	this.sethero_X = function (val) {
-		pos.x += val
+		if(pos.x + val > 0 && pos.x + val< remove_px(container.x)-25)
+			pos.x += val
 		draw_hero()
 	}
 
 	this.sethero_Y = function (val) {
-		pos.y += val
+		if(pos.y + val > 0 && pos.y + val < remove_px(container.y)-25)
+			pos.y += val
 		draw_hero()
 	}
 

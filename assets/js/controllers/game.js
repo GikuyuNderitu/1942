@@ -102,7 +102,7 @@ const Nineteen42 = function(){
 		$('#score').html(score)
 	}
 	const draw_hero = function (pos) {
-		let hero = new Hero(0, hero_counter++)
+		let hero = new Hero(0, hero_counter++, {x: $('#container').css('width'), y: $('#container').css('height')})
 		heroes.push(hero)
 	}
 
